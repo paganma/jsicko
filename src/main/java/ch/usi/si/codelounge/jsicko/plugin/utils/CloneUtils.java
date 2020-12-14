@@ -21,15 +21,16 @@
 package ch.usi.si.codelounge.jsicko.plugin.utils;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 
-
-/**
- * Utility class for object cloning.
- */
 public final class CloneUtils {
+
+    static Kryo kryo = new Kryo();
+
+    static {
+        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+        kryo.setCopyReferences(true);
+    }
 
     private CloneUtils() {
         throw new RuntimeException("This is an utility class that is supposed to have no instances.");
@@ -42,12 +43,7 @@ public final class CloneUtils {
      * @return a clone of the given object.
      */
     public static <E> E kryoClone(E object) {
-        Kryo kryo = new Kryo();
-        kryo.setCopyReferences(true);
-        E clonedObject = kryo.copy(object);
-        return clonedObject;
+        return kryo.copy(object);
     }
-
-
 
 }
